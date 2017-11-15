@@ -1,3 +1,4 @@
+set rtp+=~/.fzf
 set nocompatible
 set autoindent
 set smartindent
@@ -33,8 +34,7 @@ syntax on
 filetype plugin on
 colorscheme ron
 set listchars=tab:»·,trail:·
-nmap <Leader>o :FufFile **/<CR>
-nmap <Leader>i :FufBuffer <CR>
+nmap <Leader>o :FZF<CR>
 
 let g:fuf_file_exclude= '\v\~$|\.d$|\.dd$|\.o$|\.svn[/\\]$'
 
@@ -44,3 +44,4 @@ map <c-k> :bn<enter>
 map <c-j> :bp<enter>
 
 :nnoremap <Space> :nohlsearch<CR>
+
