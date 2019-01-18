@@ -21,6 +21,8 @@ set undofile
 let mapleader = "\\"
 set clipboard+=unnamed
 set expandtab
+set visualbell
+set noerrorbells
 
 filetype off
 filetype plugin indent on " Enable file-type indentation
