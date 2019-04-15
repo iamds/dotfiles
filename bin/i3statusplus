@@ -1,0 +1,46 @@
+#!/bin/sh
+
+readable() {
+  local bytes=$1
+  local kib=$(( bytes >> 10 ))
+  if [ $kib -lt 0 ]; then
+    echo "? K"
+  elif [ $kib -gt 1024 ]; then
+    local mib_int=$(( kib >> 10 ))
+    local mib_dec=$(( kib % 1024 * 976 / 10000 ))
+    if [ "$mib_dec" -lt 10 ]; then
+      mib_dec="0${mib_dec}"
+    fi
+    echo "${mib_int}.${mib_dec} M"
+  else
+    echo "${kib} K"
+  fi
+}
+
+last_time=0
+last_rx=0
+last_tx=0
+
+i3status | (read line && echo "$line" && read line && echo "$line" && read line && echo "$line" && while :
+do
+  time=$(date +%s)
+  rx=0 tx=0
+  rate=""
+
+  rx=$(cat /sys/class/net/eno1/statistics/rx_bytes)
+  tx=$(cat /sys/class/net/eno1/statistics/tx_bytes)
+
+  interval=$(( $time - $last_time ))
+  if [ $interval -gt 0 ]; then
+    rate="$(readable $(( (rx - last_rx) / interval )))↓ $(readable $(( (tx - last_tx) / interval )))↑"
+  fi
+
+  last_time=$time
+  last_rx=$rx
+  last_tx=$tx
+
+  read line
+  swap_mem=`free -h | grep Swap | awk '{print $3}'`
+  free_mem=`free -h | grep Mem | awk '{print $7}'`
+  echo ",[{\"full_text\":\"${rate}\" },{\"full_text\":\"${free_mem}\" },{\"full_text\":\"${swap_mem}\" },${line#,\[}" || exit 1
+done)
