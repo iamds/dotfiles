@@ -4,7 +4,7 @@ set $mod Mod4
 # is used in the bar {} block below.
 font pango:System San Fransisco Display 10
 
-new_window pixel 2
+new_window pixel 4
 
 # This font is widely installed, provides lots of unicode glyphs, right-to-left
 # text rendering and scalability on retina/hidpi displays (thanks to pango).
@@ -51,7 +51,7 @@ bindsym $mod+z fullscreen toggle
 
 # change container layout (stacked, tabbed, toggle split)
 #bindsym $mod+s layout stacking
-#bindsym $mod+w layout tabbed
+bindsym $mod+w layout tabbed
 #bindsym $mod+e layout toggle split
 
 # toggle tiling / floating
@@ -62,20 +62,24 @@ bindsym $mod+space focus mode_toggle
 
 # focus the parent container
 bindsym $mod+a focus parent
+bindsym $mod+Shift+a focus child
 
-bindsym $mod+x exec i3lock
+bindsym $mod+x exec xscreensaver-command -lock
+exec_always xscreensaver
 
 # focus the child container
 #bindsym $mod+d focus child
 
+set $terminal "1:"
 set $chrome "2:"
 set $idea "3:"
+set $mail "4"
 
 # switch to workspace
-bindsym $mod+1 workspace 1
+bindsym $mod+1 workspace $terminal
 bindsym $mod+2 workspace $chrome
 bindsym $mod+3 workspace $idea
-bindsym $mod+4 workspace 4
+bindsym $mod+4 workspace $mail
 bindsym $mod+5 workspace 5
 bindsym $mod+6 workspace 6
 bindsym $mod+7 workspace 7
@@ -84,10 +88,10 @@ bindsym $mod+9 workspace 9
 bindsym $mod+0 workspace 10
 
 # move focused container to workspace
-bindsym $mod+Shift+1 move container to workspace 1; workspace 1
+bindsym $mod+Shift+1 move container to workspace $terminal; workspace $terminal
 bindsym $mod+Shift+2 move container to workspace $chrome; workspace $chrome
 bindsym $mod+Shift+3 move container to workspace $idea; workspace $idea
-bindsym $mod+Shift+4 move container to workspace 4; workspace 4
+bindsym $mod+Shift+4 move container to workspace $mail; workspace $mail
 bindsym $mod+Shift+5 move container to workspace 5; workspace 5
 bindsym $mod+Shift+6 move container to workspace 6; workspace 6
 bindsym $mod+Shift+7 move container to workspace 7; workspace 7
@@ -95,8 +99,15 @@ bindsym $mod+Shift+8 move container to workspace 8; workspace 8
 bindsym $mod+Shift+9 move container to workspace 9; workspace 9
 bindsym $mod+Shift+0 move container to workspace 10; workspace 10
 
-assign [class="Google-chrome"] $chrome
-for_window [class="Google-chrome"] border none
+assign [instance="outlook.office365.com__mail_inbox"] $mail
+assign [instance="teams.microsoft.com"] $mail
+assign [instance="google-chrome"] $chrome
+for_window [instance="google-chrome"] border none
+
+bindsym $mod+m [instance="outlook.office365.com__mail_inbox"] focus; resize grow width 10 px; resize grow width 10 px; resize grow width 10 px; resize grow width 10 px; resize grow width 10 px; resize grow width 10 px; resize grow width 10 px; resize grow width 10 px; resize grow width 10 px
+bindsym $mod+t [instance="teams.microsoft.com"] focus; resize grow width 10 px; resize grow width 10 px; resize grow width 10 px; resize grow width 10 px; resize grow width 10 px; resize grow width 10 px; resize grow width 10 px; resize grow width 10 px; resize grow width 10 px
+
+bindsym $mod+c [instance="google-chrome"] focus
 
 assign [class="jetbrains-idea"] $idea
 
@@ -149,7 +160,7 @@ client.urgent           $urgent-bg-color    $urgent-bg-color   $text-color      
 
 # bar
 bar {
-    status_command i3status
+    status_command /home/dschiff/bin/i3statusplus
 
     colors {
         background $inactive-bg-color
@@ -161,8 +172,8 @@ bar {
     }
 }
 
-exec /opt/google/chrome/chrome --profile-directory=Default --app-id=ibijplpfnigafnmgaefbdndcldljnjnd
-exec /opt/google/chrome/chrome --profile-directory=Default --app-id=jcdgjcepcaifjmnfnocfelbjogfhnnhf
 exec_always xrandr --output DP-7 --off --output DP-6 --off --output DP-5 --off --output DP-4 --off --output DP-3 --mode 1920x1200 --pos 0x0 --rotate normal --output DP-2 --mode 1920x1200 --pos 3840x0 --rotate normal --output DP-1 --off --output DP-0 --mode 1920x1200 --pos 1920x0 --rotate normal
 exec gedit
 exec ~/bin/keyboard.sh
+
+exec bash ~/runtmux.sh
